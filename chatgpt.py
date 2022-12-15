@@ -2,22 +2,18 @@ import os
 import openai
 import globalvar as gl
 
-openai.api_key = ''
 gl._init()
-gl.set_value('temperature', 0.5)
-gl.set_value('top_p', 1.0)
-gl.set_value('frequency_penalty', 0)
-gl.set_value('presence_penalty', 0)
+openai.api_key = gl.get_value('Openai', "APIkey")
 
 def getResponse(prompt):
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=prompt,
-        temperature=gl.get_value('temperature'),
+        temperature=gl.get_value('Parameter','temperature'),
         max_tokens=2048,
         top_p=1,
-        frequency_penalty=gl.get_value('frequency_penalty'),
-        presence_penalty=gl.get_value('presence_penalty')
+        frequency_penalty=gl.get_value('Parameter','frequency_penalty'),
+        presence_penalty=gl.get_value('Parameter','presence_penalty')
     )
     return (response["choices"][0]["text"].strip()), evaluate(response["choices"][0]["text"])
 
@@ -62,4 +58,4 @@ def evaluate(output_label):
 
 
 if (__name__ == "__main__"):
-    print(getResponse("给出爬取程序"))
+    print(getResponse("你好"))

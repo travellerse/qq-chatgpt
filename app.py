@@ -23,10 +23,10 @@ def get_data():
         msgid = request.get_json().get('message_id')
 
         if msg.startswith('/param'):
-            msg = f"""temperature = {gl.get_value('temperature')}
-top_p = {gl.get_value('top_p')}
-frequency_penalty = {gl.get_value('frequency_penalty')}
-presence_penalty = {gl.get_value('presence_penalty')}"""
+            msg = f"""temperature = {gl.get_value('Parameter','temperature')}
+top_p = {gl.get_value('Parameter','top_p')}
+frequency_penalty = {gl.get_value('Parameter','frequency_penalty')}
+presence_penalty = {gl.get_value('Parameter','presence_penalty')}"""
             send_group_msg(gid, msg, msgid)
             return "OK"
 
@@ -55,32 +55,36 @@ value范围:-2.0~2.0
             msg = msg.replace('/set', '').strip()
             op, value = msg.split(' ')
             if op == 'temperature' or op == 't':
-                if float(value)>1 or float(value)<0:
-                    send_group_msg(gid, f"超出范围，无法将temperature设置为{float(value)}", msgid)
+                if float(value) > 1 or float(value) < 0:
+                    send_group_msg(
+                        gid, f"超出范围，无法将temperature设置为{float(value)}", msgid)
                     return "OK"
-                gl.set_value('temperature', float(value))
+                gl.set_value('Parameter', 'temperature', float(value))
                 send_group_msg(gid, f"将temperature设置为{float(value)}", msgid)
                 return "OK"
             if op == 'top_p' or op == 'top':
-                if float(value)>1 or float(value)<0:
-                    send_group_msg(gid, f"超出范围，无法将top_p设置为{float(value)}", msgid)
+                if float(value) > 1 or float(value) < 0:
+                    send_group_msg(
+                        gid, f"超出范围，无法将top_p设置为{float(value)}", msgid)
                     return "OK"
-                gl.set_value('top_p', float(value))
+                gl.set_value('Parameter', 'top_p', float(value))
                 send_group_msg(gid, f"将top_p设置为{float(value)}", msgid)
                 return "OK"
             if op == 'frequency_penalty' or op == 'f':
-                if float(value)>2 or float(value)<-2:
-                    send_group_msg(gid, f"超出范围，无法将frequency_penalty设置为{float(value)}", msgid)
+                if float(value) > 2 or float(value) < -2:
+                    send_group_msg(
+                        gid, f"超出范围，无法将frequency_penalty设置为{float(value)}", msgid)
                     return "OK"
-                gl.set_value('frequency_penalty', float(value))
+                gl.set_value('Parameter', 'frequency_penalty', float(value))
                 send_group_msg(
                     gid, f"将frequency_penalty设置为{float(value)}", msgid)
                 return "OK"
             if op == 'presence_penalty' or op == 'p':
-                if float(value)>2 or float(value)<-2:
-                    send_group_msg(gid, f"超出范围，无法将presence_penalty设置为{float(value)}", msgid)
+                if float(value) > 2 or float(value) < -2:
+                    send_group_msg(
+                        gid, f"超出范围，无法将presence_penalty设置为{float(value)}", msgid)
                     return "OK"
-                gl.set_value('presence_penalty', float(value))
+                gl.set_value('Parameter', 'presence_penalty', float(value))
                 send_group_msg(
                     gid, f"将presence_penalty设置为{float(value)}", msgid)
                 return "OK"
@@ -97,5 +101,4 @@ def main():
     server.serve_forever()
 
 
-if __name__ == '__main__':
-    main()
+main()
