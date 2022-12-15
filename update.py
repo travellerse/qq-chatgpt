@@ -22,16 +22,17 @@ def check_update():
 
 def download_update(version):
     # 下载最新版本的软件
+    fliename = 'qq-chatgpt-'+version+'.rar'
     response = requests.get(
         'https://github.com/travellerse/qq-chatgpt/releases/download/'+version+'/'+'qq-chatgpt-'+version+'.rar')
-    with open('software.zip', 'wb') as f:
+    with open(fliename, 'wb') as f:
         f.write(response.content)
 
     # 解压文件
-    os.system('unzip software.zip')
+    os.system(f'unzip {fliename}')
 
     # 删除压缩文件
-    os.remove('software.zip')
+    os.remove(fliename)
 
     # 提示更新完成
     print('软件更新完成！')
