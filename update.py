@@ -21,8 +21,8 @@ def compare_version(v1, v2):
             else:
                 return -1
 
-    if(len(v1_list)!= len(v2_list)):
-        return -1 if len(v1_list)>len(v2_list) else 1
+    if (len(v1_list) != len(v2_list)):
+        return -1 if len(v1_list) > len(v2_list) else 1
     # 如果所有项都相同，则返回0
     return 0
 
@@ -31,8 +31,12 @@ def check_update():
     with open("version.txt", "r") as f:
         version = f.read()
     # 请求服务器获取最新版本号
-    response = requests.get(
-        'https://github.com/travellerse/qq-chatgpt/raw/master/version.txt', verify=False)
+    try:
+        response = requests.get(
+            'https://github.com/travellerse/qq-chatgpt/raw/master/version.txt')
+    except:
+        response = requests.get(
+            'https://github.com/travellerse/qq-chatgpt/raw/master/version.txt', verify=False)
     new_version = response.text
 
     # 判断本地版本号与服务器版本号
@@ -49,8 +53,12 @@ def check_update():
 def download_update(version):
     # 下载最新版本的软件
     filename = 'qq-chatgpt-'+version+'.zip'
-    response = requests.get(
-        'https://github.com/travellerse/qq-chatgpt/releases/download/'+version+'/'+'qq-chatgpt-'+version+'.zip', verify=False)
+    try:
+        response = requests.get(
+            'https://github.com/travellerse/qq-chatgpt/releases/download/'+version+'/'+'qq-chatgpt-'+version+'.zip')
+    except:
+        response = requests.get(
+            'https://github.com/travellerse/qq-chatgpt/releases/download/'+version+'/'+'qq-chatgpt-'+version+'.zip', verify=False)
     with open(filename, 'wb') as f:
         f.write(response.content)
 
