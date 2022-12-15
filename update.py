@@ -15,9 +15,11 @@ def check_update():
     if version != new_version:
         # 如果不一致，则下载最新版本的软件
         download_update(new_version)
+        return True
     else:
         # 如果一致，则不用更新
         print('您的软件已是最新版本！')
+        return False
 
 # 定义下载更新的函数
 
@@ -39,4 +41,4 @@ def download_update(version):
     os.remove(filename)
 
     # 提示更新完成
-    print('软件更新完成！')
+    print('软件更新完成！\n请重新启动')
