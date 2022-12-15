@@ -1,12 +1,14 @@
 import os
 import time
 import requests
+import zipfile
 
 def check_update():
-    with open("version.txt","r") as f:
+    with open("version.txt", "r") as f:
         version = f.read()
     # 请求服务器获取最新版本号
-    response = requests.get('https://github.com/travellerse/qq-chatgpt/blob/master/version.txt')
+    response = requests.get(
+        'https://github.com/travellerse/qq-chatgpt/raw/master/version.txt', verify=False)
     new_version = response.text
 
     # 判断本地版本号与服务器版本号是否一致
@@ -22,17 +24,19 @@ def check_update():
 
 def download_update(version):
     # 下载最新版本的软件
-    fliename = 'qq-chatgpt-'+version+'.rar'
+    filename = 'qq-chatgpt-'+version+'.zip'
     response = requests.get(
-        'https://github.com/travellerse/qq-chatgpt/releases/download/'+version+'/'+'qq-chatgpt-'+version+'.rar')
-    with open(fliename, 'wb') as f:
+        'https://github.com/travellerse/qq-chatgpt/releases/download/'+version+'/'+'qq-chatgpt-'+version+'.zip', verify=False)
+    with open(filename, 'wb') as f:
         f.write(response.content)
 
     # 解压文件
-    os.system(f'unzip {fliename}')
+    zip_file = zipfile.ZipFile(filename, 'r')
+    zip_file.extractall('./')
+    zip_file.close()
 
     # 删除压缩文件
-    os.remove(fliename)
+    os.remove(filename)
 
     # 提示更新完成
     print('软件更新完成！')
