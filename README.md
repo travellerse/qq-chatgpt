@@ -1,5 +1,5 @@
 # qq-chatgpt
-以go-cqhttp为主程序编写的chatgpt调用qq机器人，python部分
+使用openai官方api进行chatgpt调用的qq机器人，配合go-cqhttp使用
 
 # 使用方法
 使用pip install -r requirment.txt安装依赖，运行app.py
