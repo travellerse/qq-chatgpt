@@ -101,7 +101,9 @@ def main():
     if check_update():
         sys.exit()
     from gevent import pywsgi
-    server = pywsgi.WSGIServer(('127.0.0.1', int(gl.get_value('Openai', 'port'))), app)
+    print(f"开始监听127.0.0.1:{int(gl.get_value('Openai', 'port'))}")
+    server = pywsgi.WSGIServer(
+        ('127.0.0.1', int(gl.get_value('Openai', 'port'))), app)
     server.serve_forever()
 
 
