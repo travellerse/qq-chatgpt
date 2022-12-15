@@ -2,7 +2,7 @@ import os
 import openai
 import globalvar as gl
 
-openai.api_key = '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'
+openai.api_key = ''
 gl._init()
 gl.set_value('temperature', 0.5)
 gl.set_value('top_p', 1.0)
