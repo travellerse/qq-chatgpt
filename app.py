@@ -4,6 +4,7 @@ from api import send_group_msg
 from chatgpt import getResponse
 from update import check_update
 import sys
+import os
 import globalvar as gl
 app = Flask(__name__)
 
