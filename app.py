@@ -99,7 +99,7 @@ value范围:-2.0~2.0
 
 def main():
     if check_update():
-        sys.exit()
+        os.execv(sys.executable, ['python'] + sys.argv)
     from gevent import pywsgi
     print(f"开始监听127.0.0.1:{int(gl.get_value('Openai', 'port'))}")
     server = pywsgi.WSGIServer(

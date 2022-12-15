@@ -41,4 +41,4 @@ def download_update(version):
     os.remove(filename)
 
     # 提示更新完成
-    print('软件更新完成！\n请重新启动')
+    print('软件更新完成！\n将重新启动')
