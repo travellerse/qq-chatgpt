@@ -3,18 +3,20 @@ import os
 
 
 def _init():
-    configInit()
+    flag = configInit()
     global config  # 创建一个config对象
     config = configparser.ConfigParser()
     config.read('config.yaml')  # 读取所有文件
+    if flag:
+        key = input("第一次运行，请输入Openai的APIkey\n")
+        set_value('Openai', "APIkey", key)
 
 
 def configInit():
     if not os.path.exists('config.yaml'):
         with open('config.yaml', 'w') as f:
             f.write(configfile)
-    key = input("第一次运行，请输入Openai的APIkey")
-    set_value('Openai', "APIkey", key)
+    return True
 
 
 def get_value(section, name):  # 获取某个文件中的某个变量
