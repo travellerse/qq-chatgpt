@@ -16,7 +16,9 @@ def configInit():
     if not os.path.exists('config.yaml'):
         with open('config.yaml', 'w') as f:
             f.write(configfile)
-    return True
+        return True
+    else:
+        return False
 
 
 def get_value(section, name):  # 获取某个文件中的某个变量
@@ -32,11 +34,12 @@ def set_value(section, name, value):  # 修改某个文件中的某个变量
 
 
 configfile = """[Openai]
-APIkey : 
+APIkey = 
+port = 9000
 
 [Parameter]
-temperature : 0
-top_p : 1
-frequency_penalty : 0
-presence_penalty : 0
+temperature = 0
+top_p = 1
+frequency_penalty = 0
+presence_penalty = 0
 """

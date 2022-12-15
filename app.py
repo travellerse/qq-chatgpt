@@ -99,7 +99,7 @@ value范围:-2.0~2.0
 def main():
     #check_update()
     from gevent import pywsgi
-    server = pywsgi.WSGIServer(('127.0.0.1', 9000), app)
+    server = pywsgi.WSGIServer(('127.0.0.1', int(gl.get_value('Openai', 'port'))), app)
     server.serve_forever()
 
 
