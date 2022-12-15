@@ -2,6 +2,7 @@ from flask import Flask, request
 from api import send_private_msg
 from api import send_group_msg
 from chatgpt import getResponse
+from update import check_update
 import globalvar as gl
 app = Flask(__name__)
 
@@ -96,6 +97,7 @@ value范围:-2.0~2.0
 
 
 def main():
+    #check_update()
     from gevent import pywsgi
     server = pywsgi.WSGIServer(('127.0.0.1', 9000), app)
     server.serve_forever()
