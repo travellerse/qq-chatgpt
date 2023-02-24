@@ -1,21 +1,23 @@
 import os
 import openai
-import globalvar as gl
+import config as cf
+import chatgpt
 
-gl._init()
-openai.api_key = gl.get_value('Openai', "APIkey")
+cf._init()
+openai.api_key = cf.get_value('Openai', "APIkey")
 
 def getResponse(prompt):
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=prompt,
-        temperature=gl.get_value('Parameter','temperature'),
+        temperature=cf.get_value('Parameter', 'temperature'),
         max_tokens=2048,
-        top_p=1,
-        frequency_penalty=gl.get_value('Parameter','frequency_penalty'),
-        presence_penalty=gl.get_value('Parameter','presence_penalty')
+        top_p=cf.get_value('Parameter', 'top_p'),
+        frequency_penalty=cf.get_value('Parameter', 'frequency_penalty'),
+        presence_penalty=cf.get_value('Parameter', 'presence_penalty')
     )
     return (response["choices"][0]["text"].strip()), evaluate(response["choices"][0]["text"])
+
 
 def evaluate(output_label):
     # This is the probability at which we evaluate that a "2" is likely real
@@ -58,4 +60,7 @@ def evaluate(output_label):
 
 
 if (__name__ == "__main__"):
-    print(getResponse("你好"))
+    while True:
+        x=input()
+        re=getResponse(x)
+        print(re)
