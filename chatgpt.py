@@ -1,20 +1,26 @@
 import os
+
 import openai
-import config as cf
+from revChatGPT.V1 import Chatbot
+
 import chatgpt
+import config as cf
+import globalvar as gl
 
 cf._init()
 openai.api_key = cf.get_value('Openai', "APIkey")
 
-def getResponse(prompt):
+
+def getResponse(prompt, uid_or_gid):
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=prompt,
-        temperature=cf.get_value('Parameter', 'temperature'),
         max_tokens=2048,
-        top_p=cf.get_value('Parameter', 'top_p'),
-        frequency_penalty=cf.get_value('Parameter', 'frequency_penalty'),
-        presence_penalty=cf.get_value('Parameter', 'presence_penalty')
+        temperature=gl.get_value(uid_or_gid).getParam('temperature'),
+        top_p=gl.get_value(uid_or_gid).getParam('top_p'),
+        frequency_penalty=gl.get_value(
+            uid_or_gid).getParam('frequency_penalty'),
+        presence_penalty=gl.get_value(uid_or_gid).getParam('presence_penalty')
     )
     return (response["choices"][0]["text"].strip()), evaluate(response["choices"][0]["text"])
 
@@ -57,10 +63,3 @@ def evaluate(output_label):
         output_label = "2"
 
     return output_label
-
-
-if (__name__ == "__main__"):
-    while True:
-        x=input()
-        re=getResponse(x)
-        print(re)

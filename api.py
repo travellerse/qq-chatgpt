@@ -10,11 +10,16 @@ def getlabel(label):
     return labels[label]
 
 
-def send_private_msg(uid, msg, label):
+def send_private_msg(uid, msg, label=None, size=None):
     url = f"http://127.0.0.1:5700/send_private_msg?"
+    message = msg
+    if label is not None:
+        message += ('\n置信度：'+getlabel(label))
+    if label is not None:
+        message += ('\n对话容量：'+str(size)+r"/1000")
     data = {
         "user_id": uid,
-        "message": msg+'\n置信度：'+getlabel(label)
+        "message": message
     }
     try:
         requests.post(url, data=data, timeout=5)
@@ -22,11 +27,13 @@ def send_private_msg(uid, msg, label):
         pass
 
 
-def send_group_msg(gid, msg, msgid, label=None):
+def send_group_msg(gid, msg, msgid, label=None, size=None):
     url = f"http://127.0.0.1:5700/send_group_msg?"
     message = f"[CQ:reply,id={msgid}] "+msg
     if label is not None:
         message += ('\n置信度：'+getlabel(label))
+    if label is not None:
+        message += ('\n对话容量：'+str(size)+r"/1000")
     data = {
         "group_id": gid,
         "message": message

@@ -37,9 +37,4 @@ configfile = """[Openai]
 APIkey = 
 port = 9000
 
-[Parameter]
-temperature = 0
-top_p = 1
-frequency_penalty = 0
-presence_penalty = 0
 """
