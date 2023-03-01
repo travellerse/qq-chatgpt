@@ -1,5 +1,5 @@
 import config as cf
-import globalvar as gl
+import conversation as con
 from api import send_group_msg, send_private_msg
 from conversation import Conversation
 
@@ -7,33 +7,38 @@ from conversation import Conversation
 def check(uid_or_gid, msg, msgid, is_private):
 
     if msg.startswith('/ls'):
-        msg = gl.get_all()
+        msg = con.get_all()
         send_msg(uid_or_gid, msg, msgid, is_private)
         return "OK"
 
     if msg.startswith('/init'):
         msg = msg.replace('/init', '').strip()
-        if (gl.get_value(uid_or_gid) == None):
-            gl.set_value(uid_or_gid, Conversation(uid_or_gid, is_private))
-        gl.set_value(uid_or_gid, gl.get_value(uid_or_gid).setInit(msg))
+        if (con.get_value(uid_or_gid) == None):
+            con.set_value(uid_or_gid, Conversation(uid_or_gid, is_private))
+        con.set_value(uid_or_gid, con.get_value(uid_or_gid).setInit(msg))
         msg = '已初始化'
         send_msg(uid_or_gid, msg, msgid, is_private)
         return "OK"
 
     if msg.startswith('/param'):
-        msg = f"""temperature = {gl.get_value(uid_or_gid).getParam('temperature')}
-top_p = {gl.get_value(uid_or_gid).getParam('top_p')}
-frequency_penalty = {gl.get_value(uid_or_gid).getParam('frequency_penalty')}
-presence_penalty = {gl.get_value(uid_or_gid).getParam('presence_penalty')}"""
+        msg = f"""temperature = {con.get_value(uid_or_gid).getParam('temperature')}
+top_p = {con.get_value(uid_or_gid).getParam('top_p')}
+frequency_penalty = {con.get_value(uid_or_gid).getParam('frequency_penalty')}
+presence_penalty = {con.get_value(uid_or_gid).getParam('presence_penalty')}"""
+        send_msg(uid_or_gid, msg, msgid, is_private)
+        return "OK"
+
+    if msg.startswith('/context'):
+        msg = con.get_value(uid_or_gid).getContext()
         send_msg(uid_or_gid, msg, msgid, is_private)
         return "OK"
 
     if msg.startswith('/re'):
-        if (gl.get_value(uid_or_gid) != None):
-            gl.set_value(uid_or_gid, gl.get_value(uid_or_gid).restart())
+        if (con.get_value(uid_or_gid) != None):
+            con.set_value(uid_or_gid, con.get_value(uid_or_gid).restart())
             msg = '已清除对话'
             send_msg(uid_or_gid, msg, msgid, is_private,
-                     size=gl.get_value(uid_or_gid).getCount())
+                     size=con.get_value(uid_or_gid).getCount())
         return "OK"
 
     if msg.startswith('/help'):
@@ -49,7 +54,7 @@ presence_penalty = {gl.get_value(uid_or_gid).getParam('presence_penalty')}"""
                 send_msg(
                     uid_or_gid, f"超出范围，无法将temperature设置为{float(value)}", msgid, is_private)
                 return "OK"
-            gl.set_value(uid_or_gid, gl.get_value(
+            con.set_value(uid_or_gid, con.get_value(
                 uid_or_gid).setParam('temperature', float(value)))
             send_msg(
                 uid_or_gid, f"将temperature设置为{float(value)}", msgid, is_private)
@@ -59,7 +64,7 @@ presence_penalty = {gl.get_value(uid_or_gid).getParam('presence_penalty')}"""
                 send_msg(
                     uid_or_gid, f"超出范围，无法将top_p设置为{float(value)}", msgid, is_private)
                 return "OK"
-            gl.set_value(uid_or_gid, gl.get_value(
+            con.set_value(uid_or_gid, con.get_value(
                 uid_or_gid).setParam('top_p', float(value)))
             send_msg(uid_or_gid, f"将top_p设置为{float(value)}", msgid, is_private)
             return "OK"
@@ -68,7 +73,7 @@ presence_penalty = {gl.get_value(uid_or_gid).getParam('presence_penalty')}"""
                 send_msg(
                     uid_or_gid, f"超出范围，无法将frequency_penalty设置为{float(value)}", msgid, is_private)
                 return "OK"
-            gl.set_value(uid_or_gid, gl.get_value(
+            con.set_value(uid_or_gid, con.get_value(
                 uid_or_gid).setParam('frequency_penalty', float(value)))
             send_msg(
                 uid_or_gid, f"将frequency_penalty设置为{float(value)}", msgid, is_private)
@@ -78,7 +83,7 @@ presence_penalty = {gl.get_value(uid_or_gid).getParam('presence_penalty')}"""
                 send_msg(
                     uid_or_gid, f"超出范围，无法将presence_penalty设置为{float(value)}", msgid, is_private)
                 return "OK"
-            gl.set_value(uid_or_gid, gl.get_value(
+            con.set_value(uid_or_gid, con.get_value(
                 uid_or_gid).setParam('presence_penalty', float(value)))
             send_msg(
                 uid_or_gid, f"将presence_penalty设置为{float(value)}", msgid, is_private)
@@ -112,6 +117,4 @@ value范围:-2.0~2.0
 6. /re
 清除现有对话。
 7. /init param
-为模型初始化，param为模型的最初叙述，不会被/re清除。
-8. /ls
-显示现有对话列表。"""
+为模型初始化，param为模型的最初叙述，不会被/re清除。"""

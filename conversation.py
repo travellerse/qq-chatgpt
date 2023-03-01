@@ -58,3 +58,28 @@ class Conversation:
             return self.frequency_penalty
         if op == 'presence_penalty':
             return self.presence_penalty
+
+
+def _init():
+    global conversation_dict
+    conversation_dict = {}
+
+
+def set_value(name, value):
+    conversation_dict[name] = value
+    print(name, value.getCount())
+
+
+def get_value(name, defValue=None):
+    try:
+        return conversation_dict[name]
+    except KeyError:
+        return defValue
+
+
+def get_all():
+    re = ""
+    for i in conversation_dict:
+        c = conversation_dict[i]
+        re += "ID:"+str(c.id)+" 对话容量:"+str(c.getCount())+"/1000\n"
+    return re

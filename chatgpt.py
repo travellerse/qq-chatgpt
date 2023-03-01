@@ -1,28 +1,45 @@
 import os
+import traceback
 
 import openai
 from revChatGPT.V1 import Chatbot
 
+import chatbot as bot
 import chatgpt
 import config as cf
-import globalvar as gl
+import conversation as con
+from api import error_print
+from chatbot import chatbot
 
 cf._init()
 openai.api_key = cf.get_value('Openai', "APIkey")
 
 
-def getResponse(prompt, uid_or_gid):
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        max_tokens=2048,
-        temperature=gl.get_value(uid_or_gid).getParam('temperature'),
-        top_p=gl.get_value(uid_or_gid).getParam('top_p'),
-        frequency_penalty=gl.get_value(
-            uid_or_gid).getParam('frequency_penalty'),
-        presence_penalty=gl.get_value(uid_or_gid).getParam('presence_penalty')
-    )
-    return (response["choices"][0]["text"].strip()), evaluate(response["choices"][0]["text"])
+def getResponse(prompt, uid_or_gid, chatgpt=False):
+    if (chatgpt == False):
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            max_tokens=2048,
+            temperature=con.get_value(uid_or_gid).getParam('temperature'),
+            top_p=con.get_value(uid_or_gid).getParam('top_p'),
+            frequency_penalty=con.get_value(
+                uid_or_gid).getParam('frequency_penalty'),
+            presence_penalty=con.get_value(
+                uid_or_gid).getParam('presence_penalty')
+        )
+        return (response["choices"][0]["text"].strip()), evaluate(response["choices"][0]["text"])
+    else:
+        if bot.get_value(uid_or_gid) == None:
+            bot.set_value(uid_or_gid, chatbot(uid_or_gid))
+        b = bot.get_value(uid_or_gid)
+        try:
+            for data in b.core.ask(prompt):
+                response = data["message"]
+            bot.set_value(uid_or_gid, b)
+            return response
+        except Exception as e:
+            return error_print(e)
 
 
 def evaluate(output_label):

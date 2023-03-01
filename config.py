@@ -5,7 +5,7 @@ import os
 def _init():
     flag = configInit()
     global config  # 创建一个config对象
-    config = configparser.ConfigParser()
+    config = configparser.RawConfigParser()
     config.read('config.yaml')  # 读取所有文件
     if flag:
         key = input("第一次运行，请输入Openai的APIkey\n")
@@ -37,4 +37,9 @@ configfile = """[Openai]
 APIkey = 
 port = 9000
 
+[Chatgpt]
+email =
+password =
+proxy =
+access_token = 
 """

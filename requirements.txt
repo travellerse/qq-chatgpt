@@ -1,0 +1,6 @@
+flask
+openai
+requests
+configparser
+revChatGPT
+gevent

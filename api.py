@@ -1,3 +1,5 @@
+import traceback
+
 import requests
 
 
@@ -42,3 +44,9 @@ def send_group_msg(gid, msg, msgid, label=None, size=None):
         requests.post(url, data=data, timeout=5)
     except:
         pass
+
+
+def error_print(error):
+    info = str(error.args) + "\n==========\n" + str(traceback.format_exc())
+    print(info)
+    return (info)
