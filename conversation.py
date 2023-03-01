@@ -1,3 +1,6 @@
+from globalvar import globalvar
+
+
 class Conversation:
 
     def __init__(self, ID, Is_private):
@@ -60,26 +63,16 @@ class Conversation:
             return self.presence_penalty
 
 
-def _init():
-    global conversation_dict
-    conversation_dict = {}
+class globalvar_converstaion(globalvar):
+    def __init__(self):
+        globalvar.__init__(self)
+
+    def get_all(self):
+        re = ""
+        for i in self.conversation_dict:
+            c = self.conversation_dict[i]
+            re += "ID:"+str(c.id)+" 对话容量:"+str(c.getCount())+"/1000\n"
+        return re
 
 
-def set_value(name, value):
-    conversation_dict[name] = value
-    print(name, value.getCount())
-
-
-def get_value(name, defValue=None):
-    try:
-        return conversation_dict[name]
-    except KeyError:
-        return defValue
-
-
-def get_all():
-    re = ""
-    for i in conversation_dict:
-        c = conversation_dict[i]
-        re += "ID:"+str(c.id)+" 对话容量:"+str(c.getCount())+"/1000\n"
-    return re
+conversation_dict = globalvar_converstaion()

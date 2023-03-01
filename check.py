@@ -1,7 +1,23 @@
 import config as cf
-import conversation as con
 from api import send_group_msg, send_private_msg
 from conversation import Conversation
+from conversation import conversation_dict as con
+from globalvar import globalvar
+
+switch = globalvar()
+
+
+def check_switch(uid_or_gid, msg, msgid, is_private):
+    if msg.startswith('/switch'):
+        if switch.get_value(uid_or_gid, False) == False:
+            switch.set_value(uid_or_gid, True)
+            msg = "已切换至Chatgpt3.5"
+        else:
+            switch.set_value(uid_or_gid, False)
+            msg = "已切换至Chatgpt3.0"
+        send_msg(uid_or_gid, msg, msgid, is_private)
+        return switch.get_value(uid_or_gid), True
+    return switch.get_value(uid_or_gid, False), False
 
 
 def check(uid_or_gid, msg, msgid, is_private):

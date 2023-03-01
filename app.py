@@ -1,28 +1,31 @@
 import os
 import sys
 import threading
+import time
 import traceback
 
 import openai
 from flask import Flask, request
 from revChatGPT.V1 import Chatbot
 
-import chatbot as bot
 import config as cf
-import conversation as con
 from api import error_print, send_group_msg, send_private_msg
 from chatbot import chatbot
+from chatbot import chatbot_dict as bot
 from chatgpt import getResponse
-from check import check
+from check import check, check_switch
 from conversation import Conversation
-import time
+from conversation import conversation_dict as con
 
 app = Flask(__name__)
 
 lock = threading.Lock()
 
 
-def chat(uid_or_gid, msg, msgid, json, is_private=False, chatgpt=False):
+def chat(uid_or_gid, msg, msgid, json, is_private=False):
+    chatgpt, flag = check_switch(uid_or_gid, msg, msgid, is_private)
+    if (flag == True):
+        return "OK"
     if (chatgpt == False):
         # lock.acquire()
         if con.get_value(uid_or_gid) == None:
@@ -71,7 +74,7 @@ def get_data():
         msg = json.get('raw_message')
         msgid = json.get('message_id')
         threading.Thread(target=chat, args=(
-            uid, msg, msgid, json, True, False)).start()
+            uid, msg, msgid, json, True)).start()
         return "OK"
 
     if json.get('message_type') == 'group' and json.get('raw_message').startswith('[CQ:at,qq=3550491050]'):
@@ -80,15 +83,13 @@ def get_data():
             '[CQ:at,qq=3550491050]', '').strip()
         msgid = json.get('message_id')
         threading.Thread(target=chat, args=(
-            gid, msg, msgid, json, False, False)).start()
+            gid, msg, msgid, json, False)).start()
         return "OK"
 
     return "OK"
 
 
 def main():
-    con._init()
-    bot._init()
     from gevent import pywsgi
     print(f"开始监听127.0.0.1:{int(cf.get_value('Openai', 'port'))}")
     server = pywsgi.WSGIServer(

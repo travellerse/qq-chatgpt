@@ -4,12 +4,12 @@ import traceback
 import openai
 from revChatGPT.V1 import Chatbot
 
-import chatbot as bot
 import chatgpt
 import config as cf
-import conversation as con
 from api import error_print
 from chatbot import chatbot
+from chatbot import chatbot_dict as bot
+from conversation import conversation_dict as con
 
 cf._init()
 openai.api_key = cf.get_value('Openai', "APIkey")

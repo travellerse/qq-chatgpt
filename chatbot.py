@@ -1,5 +1,7 @@
 from revChatGPT.V1 import Chatbot
+
 import config as cf
+from globalvar import globalvar
 
 
 class chatbot:
@@ -19,17 +21,4 @@ class chatbot:
             )
 
 
-def _init():
-    global conversation_dict
-    conversation_dict = {}
-
-
-def set_value(name, value):
-    conversation_dict[name] = value
-
-
-def get_value(name, defValue=None):
-    try:
-        return conversation_dict[name]
-    except KeyError:
-        return defValue
+chatbot_dict = globalvar()
