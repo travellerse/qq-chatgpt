@@ -2,3 +2,5 @@ flask
 openai
 requests
 configparser
+gevent
+revChatGPT
