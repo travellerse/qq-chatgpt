@@ -6,64 +6,11 @@ import traceback
 
 import openai
 from flask import Flask, request
-from revChatGPT.V1 import Chatbot
 
 import config as cf
-from api import error_print, send_group_msg, send_private_msg
-from chatbot import chatbot
-from chatbot import chatbot_dict as bot
-from chatgpt import getResponse
-from check import check, check_switch
-from conversation import Conversation
-from conversation import conversation_dict as con
+from chat import chat
 
 app = Flask(__name__)
-
-lock = threading.Lock()
-
-
-def chat(uid_or_gid, msg, msgid, json, is_private=False):
-    chatgpt, flag = check_switch(uid_or_gid, msg, msgid, is_private)
-    if (flag == True):
-        return "OK"
-    if (chatgpt == False):
-        # lock.acquire()
-        if con.get_value(uid_or_gid) == None:
-            con.set_value(uid_or_gid, Conversation(uid_or_gid, is_private))
-        if check(uid_or_gid, msg, msgid, is_private) == "OK":
-            return "OK"
-        con.set_value(uid_or_gid, con.get_value(uid_or_gid).add(msg, "user"))
-        while con.get_value(uid_or_gid).getCount() > 1000:
-            con.set_value(uid_or_gid, con.get_value(uid_or_gid).clear())
-        try:
-            re, label = getResponse(con.get_value(
-                uid_or_gid).getContext()+"\nAI:", uid_or_gid)
-            con.set_value(uid_or_gid, con.get_value(uid_or_gid).add(re, "AI"))
-            while con.get_value(uid_or_gid).getCount() > 1000:
-                con.set_value(uid_or_gid, con.get_value(uid_or_gid).clear())
-        except Exception as e:
-            re = error_print(e)
-            label = None
-            con.set_value(uid_or_gid, con.get_value(uid_or_gid).restart())
-
-        if is_private:
-            send_private_msg(uid_or_gid, re, label,
-                             con.get_value(uid_or_gid).getCount())
-        else:
-            msgid = json.get('message_id')
-            send_group_msg(uid_or_gid, re, msgid, label,
-                           con.get_value(uid_or_gid).getCount())
-        # lock.release()
-    else:
-        try:
-            re = getResponse(msg, uid_or_gid, True)
-        except Exception as e:
-            re = error_print(e)
-        if is_private:
-            send_private_msg(uid_or_gid, re)
-        else:
-            msgid = json.get('message_id')
-            send_group_msg(uid_or_gid, re, msgid)
 
 
 @app.route('/', methods=["POST", "GET"])
@@ -97,4 +44,5 @@ def main():
     server.serve_forever()
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,5 @@
 import config as cf
-from api import send_group_msg, send_private_msg
+from api import send_msg
 from conversation import Conversation
 from conversation import conversation_dict as con
 from globalvar import globalvar
@@ -11,10 +11,10 @@ def check_switch(uid_or_gid, msg, msgid, is_private):
     if msg.startswith('/switch'):
         if switch.get_value(uid_or_gid, False) == False:
             switch.set_value(uid_or_gid, True)
-            msg = "已切换至Chatgpt3.5"
+            msg = "已切换至RevChatgpt3.5"
         else:
             switch.set_value(uid_or_gid, False)
-            msg = "已切换至Chatgpt3.0"
+            msg = "已切换至gpt-3.5-turbo"
         send_msg(uid_or_gid, msg, msgid, is_private)
         return switch.get_value(uid_or_gid), True
     return switch.get_value(uid_or_gid, False), False
@@ -104,13 +104,6 @@ presence_penalty = {con.get_value(uid_or_gid).getParam('presence_penalty')}"""
             send_msg(
                 uid_or_gid, f"将presence_penalty设置为{float(value)}", msgid, is_private)
             return "OK"
-
-
-def send_msg(uid_or_gid, msg, msgid, is_private, label=None, size=None):
-    if is_private == False:
-        send_group_msg(uid_or_gid, msg, msgid, label, size)
-    else:
-        send_private_msg(uid_or_gid, msg, label, size)
 
 
 help_text = """命令帮助

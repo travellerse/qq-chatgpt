@@ -17,9 +17,11 @@ openai.api_key = cf.get_value('Openai', "APIkey")
 
 def getResponse(prompt, uid_or_gid, chatgpt=False):
     if (chatgpt == False):
-        response = openai.Completion.create(
-            model="text-davinci-003",
-            prompt=prompt,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=2048,
             temperature=con.get_value(uid_or_gid).getParam('temperature'),
             top_p=con.get_value(uid_or_gid).getParam('top_p'),
@@ -28,7 +30,7 @@ def getResponse(prompt, uid_or_gid, chatgpt=False):
             presence_penalty=con.get_value(
                 uid_or_gid).getParam('presence_penalty')
         )
-        return (response["choices"][0]["text"].strip()), evaluate(response["choices"][0]["text"])
+        return response["choices"][0]["message"]["content"].strip(), response["choices"][0]["message"]["role"].strip()
     else:
         if bot.get_value(uid_or_gid) == None:
             bot.set_value(uid_or_gid, chatbot(uid_or_gid))
@@ -80,3 +82,11 @@ def evaluate(output_label):
         output_label = "2"
 
     return output_label
+
+
+if __name__ == "__main__":
+    from conversation import Conversation
+    while 1:
+        msg = input()
+        con.set_value(1, Conversation(1, True))
+        print(getResponse(msg, 1))

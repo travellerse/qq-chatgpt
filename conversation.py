@@ -1,7 +1,10 @@
+import config as cf
 from globalvar import globalvar
 
 
 class Conversation:
+
+    SIZE = 1000
 
     def __init__(self, ID, Is_private):
         self.id = ID
@@ -71,7 +74,8 @@ class globalvar_converstaion(globalvar):
         re = ""
         for i in self.conversation_dict:
             c = self.conversation_dict[i]
-            re += "ID:"+str(c.id)+" 对话容量:"+str(c.getCount())+"/1000\n"
+            re += "ID:"+str(c.id)+" 对话容量:"+str(c.getCount()) + \
+                f"/{cf.get_value('Openai', 'max_size')}\n"
         return re
 
 
