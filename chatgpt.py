@@ -13,6 +13,7 @@ from conversation import conversation_dict as con
 
 cf._init()
 openai.api_key = cf.get_value('Openai', "APIkey")
+openai.proxy = cf.get_value("Chatgpt", "proxy")
 
 
 def getResponse(prompt, uid_or_gid, chatgpt=False):

@@ -40,6 +40,6 @@ port = 9000
 [Chatgpt]
 email =
 password =
-proxy =
+proxy = http://127.0.0.1:7890
 access_token = 
 """
